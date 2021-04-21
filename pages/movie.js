@@ -227,13 +227,6 @@
       fetch(REQUEST_URL)
         .then((response) => response.json())
         .then(async (responseData) => {
-          // 注意，这里使用了this关键字，为了保证this在调用时仍然指向当前组件，我们需要对其进行“绑定”操作
-
-          await localStore.saveData('newMovies',{
-            pageInfo:responseData.pageInfo,
-            movies: responseData.list,
-          },60*30) //缓存半个小时
-
           this.setState({
             pageInfo:responseData.pageInfo,
             movies: responseData.list,
@@ -248,12 +241,6 @@
       fetch(REQUEST_URL)
         .then((response) => response.json())
         .then(async (responseData) => {
-          // 注意，这里使用了this关键字，为了保证this在调用时仍然指向当前组件，我们需要对其进行“绑定”操作
-
-          await localStore.saveData('localMovies',{
-            pageInfo:responseData.pageInfo,
-            movies: responseData.list,
-          },60*30) //缓存半个小时
 
           this.setState({
             pageInfo:responseData.pageInfo,
