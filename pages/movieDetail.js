@@ -7,7 +7,20 @@
  */
 
  import React, { Component,useState,useEffect } from 'react';
- import { Image, StyleSheet, Text, View,ScrollView,Button,Modal,NativeModules,ActivityIndicator,ImageBackground } from 'react-native';
+ import { 
+   Platform,
+   Image, 
+   StyleSheet, 
+   Text, 
+   View,
+   ScrollView,
+   Button,
+   Modal,
+   NativeModules,
+   ActivityIndicator,
+   ImageBackground 
+  } from 'react-native';
+
  import ClickAble from '../components/clickAble';
  import AddUri from '../utils/aria2';
  import moment from 'moment';
@@ -176,7 +189,8 @@
        height:50
      },
      btnPlayFocus:{
-       opacity:0.5
+      width: 70,
+      height:70
      }
    });
 
@@ -355,15 +369,59 @@
     )
   }
 
+  function PlayButton(){
+    let style = StyleSheet.create({
+      container: {
+        flex: 1,
+        alignItems:"center",
+        justifyContent:"center",
+        width:120
+      },
+      btnPlayFocus:{
+        width: 80,
+        height:80
+      },
+      btnPlay:{
+        width: 60,
+        height:60
+      }
+    });
+    const [isFocus,setisFocus] = useState(false);
+
+    if((Platform.isTV || Platform.isPad) && movieStatus.status == 2){
+      return   (
+        <ClickAble 
+            onFocus = {()=>{
+              setisFocus(true)
+            }}
+            onBlur = {()=>{
+              setisFocus(false)
+            }}
+            onPress={()=>{
+              CalendarModule.openPlayer("http://mmhh.i234.me:3003/movies/"+movieStatus.name,movie.title);
+              
+            }}
+          >
+            <View style={style.container}>
+              <Image style={[style.btnPlay,isFocus?style.btnPlayFocus:{}]} source={require('../static/images/play-black.png')} />
+            </View>
+          </ClickAble>
+        )
+    }
+
+    return null
+    
+  }
+
    return movieDetail.title ? (
      <View>
        <View style={{paddingBottom:40,backgroundColor:'#fff'}}>
         <ScrollView>
           <View style={styles.container}>
               <View style={{...styles.headInfoWrap,backgroundColor:('#'+movieDetail.color_scheme.primary_color_light)}}>
-              <ClickAble isSupportTV={false} onPress = {()=>{
-                setshowImageModal(true)
-              }}>
+                <ClickAble isSupportTV={false} onPress = {()=>{
+                  setshowImageModal(true)
+                }}>
                 <Image onPress={()=>{
                   setshowImageModal(true)
                 }} style={styles.headInfoImage} source={{uri: movieDetail.pic.large,width:88,height:130}} />
@@ -381,6 +439,7 @@
                       color: '#eee'}}>{parseFloat(movieDetail.rating.value).toFixed(1)}  ({movieDetail.rating.count}人评分)</Text>
                   </View>
                 </View>
+                <PlayButton></PlayButton>
               </View>
 
               {movieDetail.trailer && (
@@ -424,7 +483,6 @@
         </ScrollView>
         </View>
         <View style={styles.pnlBottom}>
-
             <DownloadButton movieStatus={movieStatus}></DownloadButton>       
         </View>
      </View>
