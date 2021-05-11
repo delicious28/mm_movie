@@ -70,21 +70,16 @@ public class CalendarModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void setDataEnabled(boolean enable) throws Exception {
         Context context = getReactApplicationContext();
+
         try {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.MODIFY_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
 
+                Toast toast = Toast.makeText(getCurrentActivity(), "no permission", Toast.LENGTH_SHORT);
+                toast.show();
 
                 List<String> permissionList = new ArrayList<>();
                 permissionList.add("android.permission.MODIFY_PHONE_STATE");
                 ActivityCompat.requestPermissions(getCurrentActivity(), permissionList.toArray(new String[permissionList.size()]), 3);
-
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
 
                 return;
             }

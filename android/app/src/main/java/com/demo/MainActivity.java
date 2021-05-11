@@ -1,7 +1,9 @@
 package com.demo;
 
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -31,5 +33,15 @@ public class MainActivity extends ReactActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+    //PackageManager.PERMISSION_DENIED
+
+    Toast.makeText(this, "grantResults:"+grantResults[0], Toast.LENGTH_SHORT).show();
+
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 }

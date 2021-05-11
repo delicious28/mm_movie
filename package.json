@@ -7,7 +7,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "clean": "react-native start --reset-cache",
-    "build": "android/gradlew assembleRelease",
+    "build": "cd android && ./gradlew assembleRelease",
     "bundle-ios": "node node_modules/react-native/local-cli/cli.js bundle --entry-file index.js --platform ios --dev false --bundle-output ./ios/bundle/index.jsbundle --assets-dest ./ios/bundle",
     "link": "react-native link react-native-device-info",
     "test": "jest",

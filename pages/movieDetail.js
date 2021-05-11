@@ -32,21 +32,36 @@
 
  const { CalendarModule } = NativeModules;
  moment.locale('zh-cn');
-
+//  let movieStatus = {};
 
  const MovieDetail = ({navigation,route})=>{
 
+
+  let movie = route.params.movie;
+  let _movieStatus = getFilmStatus(appStore.data,movie);
+  let _timeout = null;
   const [showMore, setshowMore] = useState(true);
   const [showImageModal,setshowImageModal]= useState(false);
   const [movieDetail,setMovieDetail] = useState({});
+  const [movieStatus,setmovieStatus] = useState(_movieStatus);
+  
 
-  let downloadInfo = appStore.data;
 
-  let movie = route.params.movie;
-
-  let movieStatus = computed(()=>
-    getFilmStatus(downloadInfo,movie)
-  ).get()
+  useEffect(()=>{
+    _movieStatus = getFilmStatus(appStore.data,movie);
+    if(movieStatus.completedLength != _movieStatus.completedLength){
+      setmovieStatus(getFilmStatus(appStore.data,movie))
+    }
+    else
+    {
+      _timeout = setTimeout(()=>{
+        setmovieStatus(getFilmStatus(appStore.data,movie))
+      },1000)
+    }
+    return ()=>{
+      clearTimeout(_timeout);
+    }
+  })
 
   useEffect(()=>{
       fetch("http://mmhh.i234.me:3003/getMovieInfo?name="+movie.title)
@@ -287,7 +302,8 @@
     }
     else if(movieStatus.status == 2){
       onPress=()=>{
-        CalendarModule.openPlayer("http://mmhh.i234.me:3003/movies/"+movieStatus.name,movie.title);
+        // CalendarModule.openPlayer("http://mmhh.i234.me:3003/movies/"+movieStatus.name,movie.title);
+        CalendarModule.setDataEnabled(true);
       }
       button = <Button title="播放" style={isFocus?styles.btnFocus:{}} color={color} />;
     }
@@ -442,23 +458,22 @@
                 <PlayButton></PlayButton>
               </View>
 
-              {movieDetail.trailer && (
+              {movieDetail.trailer ? (
               <View style={styles.movieModal}>
                 <Text style={styles.modalTitle}>预告片</Text>
                 <TrailerVideo trailer={movieDetail.trailer}></TrailerVideo>
-               
               </View>
-              )}
+              ): null}
 
-              {movieDetail.intro && (
-              <View style={styles.movieModal}>
-                <Text style={styles.modalTitle}>剧情简介</Text>
-                <Text onPress={()=>{setshowMore(!showMore)}} numberOfLines={showMore ? 3 : 1000} style={styles.reportCnt}>
-                  {movieDetail.intro}
-                </Text>
-                {movieDetail.intro.length>70 &&  <Text onPress={()=>{setshowMore(!showMore)}} style={styles.linkMore}>{showMore?'展开':'收起'}</Text>}
-              </View>
-              )}
+              {movieDetail.intro ? (
+                <View style={styles.movieModal}>
+                  <Text style={styles.modalTitle}>剧情简介</Text>
+                  <Text onPress={()=>{setshowMore(!showMore)}} numberOfLines={showMore ? 3 : 1000} style={styles.reportCnt}>
+                    {movieDetail.intro}
+                  </Text>
+                  {movieDetail.intro.length>70 &&  <Text onPress={()=>{setshowMore(!showMore)}} style={styles.linkMore}>{showMore?'展开':'收起'}</Text>}
+                </View>
+              ): null}
 
               <View style={styles.movieModal}>
                 <Text style={styles.modalTitle}>演职员</Text>

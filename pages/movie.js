@@ -11,7 +11,6 @@
  import getStar from '../components/star';
  import ClickAble from '../components/clickAble';
  import appStore from '../store/index'
- import localStore from '../utils/store'
  import { observer } from 'mobx-react';
 
  
@@ -261,6 +260,7 @@
         fetch(REQUEST_URL)
         .then((response) => response.json())
         .then((responseData) => {
+          // console.log("写入的："+responseData[responseData.length-1].completedLength)
           appStore.saveData(responseData)
           //let timeout = (Platform.isTV || Platform.isPad) ? 10000 : 1000;
           setTimeout(()=>{
