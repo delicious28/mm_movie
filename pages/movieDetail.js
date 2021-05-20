@@ -302,8 +302,8 @@
     }
     else if(movieStatus.status == 2){
       onPress=()=>{
-        // CalendarModule.openPlayer("http://mmhh.i234.me:3003/movies/"+movieStatus.name,movie.title);
-        CalendarModule.setDataEnabled(true);
+        CalendarModule.openPlayer("http://mmhh.i234.me:3003/movies/"+movieStatus.name,movie.title);
+        // CalendarModule.setDataEnabled(true);
       }
       button = <Button title="播放" style={isFocus?styles.btnFocus:{}} color={color} />;
     }
