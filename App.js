@@ -3,22 +3,18 @@ import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Movie from './pages/movie';
+import MovieTV from './pages/movie_tv';
 import MovieDetail from './pages/movieDetail';
-import Orientation from 'react-native-orientation';
-
 const Stack = createStackNavigator();
 
 function App() {
 
-  if(Platform.isTV || Platform.isPad){
-    Orientation.lockToLandscape();
-  }
-  else
-  {
-    Orientation.lockToPortrait();
+  let moviePage = Movie;
+
+  if(Platform.isTV){
+    moviePage = MovieTV;
   }
 
-  
   let getScreenOption = title=> {
     return {
       title,
@@ -41,7 +37,7 @@ function App() {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen 
           name="电影" 
-          component={Movie} 
+          component={moviePage} 
           options={{headerShown: false}}
         />
         <Stack.Screen name="Details" options={({route})=> getScreenOption(route.title || "电影")} component={MovieDetail} />
